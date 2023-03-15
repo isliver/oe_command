@@ -35,29 +35,41 @@ def defineServers ():
 parser = argparse.ArgumentParser()
 parser.add_argument("message", nargs="+", help="Mensaje con la consulta")
 parser.add_argument("-c", "--cost", help="Muestra el costo total hasta el momento", action="store_true")
+parser.add_argument("-q", "--question", help="Pregunta a chat gpt")
+
 args = parser.parse_args()
+commandMode = True
 
 if args.cost:
     print("Show cost", args.cost, " ".join(args.message))
     gpt_cost.showTotalCost()
     sys.exit(0)
 
+if args.question:
+    commandMode = False
+
 commandArg = " ".join(args.message)
 
 openai.api_key = "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"
 
 servers = defineServers()
+LINUX_SO = "Archlinux"
+
+if commandMode:
+    content = f"Su tarea es dar comandos bash útiles que hagan lo que un usuario le pide. Solo debes proveer comandos para el sistema de zsh, no debes agregar ninguna explicacion o comentario y no se utilizaran bloques de codigo. Sistema operativo {LINUX_SO}. servidores: {servers}. Si no sabes como responder la pregunta solo di 'Comando no encontrado'"
+else:
+    content = "Tu tarea es responder lo mas breve posible las preguntas que se te haga."
 
 messagesList = [
     {
         "role": "system",
-        "content": f"Su tarea es dar comandos bash útiles que hagan lo que un usuario le pide. Solo debes proveer comandos para el sistema de zsh, no debes agregar ninguna explicacion o comentario y no se utilizaran bloques de codigo. Sistema operativo Archlinux. servidores: {servers}"
+        "content": content
     }
 ]
 
 userMessage = {
     "role": "user",
-    "content": f"Quiero que no describas nada ni expliques nada, no agreges texto mas alla del comando en bash, y entrega el comando en una linea {commandArg}"
+    "content": commandArg
 }
 
 messagesList.append(userMessage)
@@ -74,6 +86,10 @@ responseIA = response['choices'][0]['message']
 commandIA = responseIA['content'].replace('\n','')
 
 filterCommandIA = getCommand(commandIA)
+
+if not commandMode:
+    print(f"Response:\n\033[;32m{filterCommandIA}\033[0m")
+    sys.exit(0)
 
 print(f"Command:\n\033[;36m{filterCommandIA}\033[0m [Y/n]")
 
