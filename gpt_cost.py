@@ -3,7 +3,7 @@ globalPromptTokens = 0
 globalTotalTokens = 0
 
 def saveCost (cost):
-    f = open("logCost", "a")
+    f = open("log_cost", "a")
     f.write(str(cost) + "\n")
     f.close()
 
