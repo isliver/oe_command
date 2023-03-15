@@ -1,14 +1,21 @@
+import os
+
 globalCompletionTokens = 0
 globalPromptTokens = 0
 globalTotalTokens = 0
+pathHome = os.environ['HOME']
+pathLogCost = f"{pathHome}/.config/oe"
 
 def saveCost (cost):
-    f = open("log_cost", "a")
+    if not os.path.exists(pathLogCost):
+        os.makedirs(pathLogCost)
+
+    f = open(f"{pathLogCost}/log_cost", "a")
     f.write(str(cost) + "\n")
     f.close()
 
 def showTotalCost ():
-    f = open("log_cost", "r")
+    f = open(f"{pathLogCost}/log_cost", "r")
     totalCost = 0
 
     for x in f:
