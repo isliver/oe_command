@@ -41,7 +41,6 @@ args = parser.parse_args()
 commandMode = True
 
 if args.cost:
-    print("Show cost", args.cost, " ".join(args.message))
     gpt_cost.showTotalCost()
     sys.exit(0)
 
