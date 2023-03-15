@@ -8,7 +8,7 @@ def saveCost (cost):
     f.close()
 
 def showTotalCost ():
-    f = open("logCost", "r")
+    f = open("log_cost", "r")
     totalCost = 0
 
     for x in f:
