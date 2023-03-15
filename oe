@@ -1,0 +1,2 @@
+#!/bin/bash
+python3 /home/esteban/DEV/oe_gpt_terminal/main.py "$@"
