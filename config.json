@@ -1,0 +1,12 @@
+{
+    "gpt_model": "gpt-3.5-turbo",
+    "open_api_key": "api",
+    "so": "Archlinux",
+    "ssh_servers": [
+        {
+            "name": "server",
+            "user": "user",
+            "url": "server.com"
+        }
+    ]
+}

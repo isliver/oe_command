@@ -3,6 +3,14 @@ import openai
 import gpt_cost
 import sys
 import argparse
+import json
+
+pathHome = os.environ['HOME']
+pathConfig = f"{pathHome}/.config/oe"
+
+def loadConfig ():
+    with open(f"{pathConfig}/config.json", 'r') as archivo:
+        return json.load(archivo)
 
 def getCommand (response):
     findCode = response.find('```')
@@ -16,15 +24,7 @@ def getCommand (response):
 
     return cleanMD
 
-def defineServers ():
-    servers = [
-        {
-            "name": "Continuum",
-            "user": "isliver",
-            "url": "soundanalytics.cl"
-        }
-    ]
-
+def defineServers (servers):
     training_servers = ""
 
     for server in servers:
@@ -49,13 +49,18 @@ if args.question:
 
 commandArg = " ".join(args.message)
 
-openai.api_key = "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"
+config = loadConfig()
 
-servers = defineServers()
-LINUX_SO = "Archlinux"
+gptModel = config['gpt_model']
+openApi = config['open_api_key']
+linuxSo = config['so']
+sshServers = config['ssh_servers']
+servers = defineServers(sshServers)
+
+openai.api_key = openApi
 
 if commandMode:
-    content = f"Su tarea es dar comandos bash útiles que hagan lo que un usuario le pide. Solo debes proveer comandos para el sistema de zsh, no debes agregar ninguna explicacion o comentario y no se utilizaran bloques de codigo. Sistema operativo {LINUX_SO}. servidores: {servers}. Si no sabes como responder la pregunta solo di 'Comando no encontrado'"
+    content = f"Su tarea es dar comandos bash útiles que hagan lo que un usuario le pide. Solo debes proveer comandos para el sistema de zsh, no debes agregar ninguna explicacion o comentario y no se utilizaran bloques de codigo. Sistema operativo {linuxSo}. Si no sabes como responder la pregunta solo di 'Comando no encontrado'"
 else:
     content = "Tu tarea es responder lo mas breve posible las preguntas que se te haga."
 
@@ -74,21 +79,21 @@ userMessage = {
 messagesList.append(userMessage)
 
 response = openai.ChatCompletion.create(
-    model="gpt-3.5-turbo",
+    model=gptModel,
     messages=messagesList
 )
 
 gpt_cost.addResponse(response)
-gpt_cost.showCost("gpt-3.5-turbo", True)
+gpt_cost.showCost(gptModel, True)
 
-responseIA = response['choices'][0]['message']
-commandIA = responseIA['content'].replace('\n','')
-
-filterCommandIA = getCommand(commandIA)
+responseIA = response['choices'][0]['message']['content']
 
 if not commandMode:
-    print(f"Response:\n\033[;32m{filterCommandIA}\033[0m")
+    print(f"Response:\n\033[;32m{responseIA}\033[0m")
     sys.exit(0)
+
+commandIA = responseIA.replace('\n','')
+filterCommandIA = getCommand(commandIA)
 
 print(f"Command:\n\033[;36m{filterCommandIA}\033[0m [Y/n]")
 
