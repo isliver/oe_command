@@ -7,6 +7,7 @@ fi
 REPO_NAME="oe_command"
 REMOTE_URL="https://github.com/isliver/oe_command.git"
 LOCAL_DIR="$HOME/.bin/oe_command"
+CONFIG_DIR="$HOME/.config/oe"
 
 if [ -d "$LOCAL_DIR" ]; then
     cd "$LOCAL_DIR"
@@ -24,7 +25,8 @@ else
     echo -e "\033[32mClonando repositorio\033[0m"
 fi
 
-cd ~/.bin/oe_command
+cd $LOCAL_DIR
 echo -e "\033[32mCopiando Archivos de configuracion\033[0m"
 sudo cp oe /usr/local/bin
-cp config.json ~/.config/oe
+mkdir -p $CONFIG_DIR
+cp config.json $CONFIG_DIR
