@@ -32,10 +32,18 @@ def defineServers (servers):
 
     return training_servers
 
+def saveConfig (config, value):
+    configFile = loadConfig ()
+    configFile[config] = value
+
+    with open(f"{pathConfig}/config.json", 'w') as archivo:
+        json.dump(configFile, archivo)
+
 parser = argparse.ArgumentParser()
 parser.add_argument("message", nargs="+", help="Mensaje con la consulta")
 parser.add_argument("-c", "--cost", help="Muestra el costo total hasta el momento", action="store_true")
 parser.add_argument("-q", "--question", help="Pregunta a chat gpt")
+parser.add_argument("-a", "--api", help="Cambiar open ia api key", action="store_true")
 
 args = parser.parse_args()
 commandMode = True
@@ -46,6 +54,12 @@ if args.cost:
 
 if args.question:
     commandMode = False
+
+if args.api:
+    newKey = " ".join(args.message)
+    saveConfig("open_api_key", newKey)
+    print("OpenAI API Key has been updated.")
+    sys.exit(0)
 
 commandArg = " ".join(args.message)
 
