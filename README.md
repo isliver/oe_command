@@ -23,6 +23,13 @@ Este comando instalará las dependencias requeridas y copiará los archivos nece
 
 Una vez completados estos pasos, la aplicación debería estar instalada y lista para su uso.
 
+o bien con el script:
+
+```bash
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/isliver/oe_command/main/install.sh)"
+```
+*se tiene que tener instalado curl*
+
 ## Funcionalidades
 
 Carga la configuración del archivo config.json ubicado en el directorio .config/oe en la carpeta HOME del usuario.
@@ -32,6 +39,8 @@ Mensaje para la consulta
 ```bash
 -c, --cost: Muestra el costo total de las consultas realizadas hasta el momento.
 -q, --question: Realiza una pregunta al Chatbot en lugar de dar un comando útil.
+-a, --api: cambia la clave API de OpenAI.
+-u, --update: actualiza el programa.
 ```
 
 Utiliza la API de OpenAI para obtener una respuesta al mensaje de consulta.
