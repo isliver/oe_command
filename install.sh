@@ -1,7 +1,4 @@
 #!/bin/bash
-echo -e "\033[32mInstalando requerimientos\033[0m"
-pip3 install -r requirements.txt
-
 if [ ! -d "$HOME/.bin" ]; then
   echo -e "\033[32mLa carpeta ~/.bin no existe. Creando...\033[0m"
   mkdir "$HOME/.bin"

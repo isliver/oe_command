@@ -1,10 +1,10 @@
 import os
-import openai
 import gpt_cost
 import sys
 import argparse
 import json
 from tools import update
+from tools import openai
 
 pathHome = os.environ['HOME']
 pathConfig = f"{pathHome}/.config/oe"
@@ -98,7 +98,7 @@ userMessage = {
 
 messagesList.append(userMessage)
 
-response = openai.ChatCompletion.create(
+response = openai.create(
     model=gptModel,
     messages=messagesList
 )
