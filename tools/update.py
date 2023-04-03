@@ -8,7 +8,7 @@ def update ():
     REMOTE_URL = "https://github.com/isliver/oe_command.git"
     LOCAL_DIR = f"{pathHome}/.bin/oe_command"
 
-    localGit = subprocess.run(['git', 'rev-parse', 'HEAD'], stdout=subprocess.PIPE)
+    localGit = subprocess.run(['git','-C',LOCAL_DIR, 'rev-parse', 'HEAD'], stdout=subprocess.PIPE)
     remoteGit = subprocess.run(['git', 'ls-remote', '--quiet', '--heads', REMOTE_URL, 'refs/heads/main', '|', 'cut', '-f1'], stdout=subprocess.PIPE)
 
     localGitHash = localGit.stdout.decode('utf-8').strip()
