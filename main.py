@@ -4,6 +4,7 @@ import gpt_cost
 import sys
 import argparse
 import json
+from tools import update
 
 pathHome = os.environ['HOME']
 pathConfig = f"{pathHome}/.config/oe"
@@ -44,6 +45,7 @@ parser.add_argument("message", nargs="+", help="Mensaje con la consulta")
 parser.add_argument("-c", "--cost", help="Muestra el costo total hasta el momento", action="store_true")
 parser.add_argument("-q", "--question", help="Pregunta a chat gpt")
 parser.add_argument("-a", "--api", help="Cambiar open ia api key", action="store_true")
+parser.add_argument("-u", "--update", help="Actualiza oe", action="store_true")
 
 args = parser.parse_args()
 commandMode = True
@@ -59,6 +61,10 @@ if args.api:
     newKey = " ".join(args.message)
     saveConfig("open_api_key", newKey)
     print("OpenAI API Key has been updated.")
+    sys.exit(0)
+
+if args.update:
+    update.update()
     sys.exit(0)
 
 commandArg = " ".join(args.message)
