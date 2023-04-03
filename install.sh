@@ -26,5 +26,5 @@ fi
 
 cd ~/.bin/oe_command
 echo -e "\033[32mCopiando Archivos de configuracion\033[0m"
-cp oe /usr/local/bin
+sudo cp oe /usr/local/bin
 cp config.json ~/.config/oe
