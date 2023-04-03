@@ -60,7 +60,7 @@ if args.question:
 if args.api:
     newKey = " ".join(args.message)
     saveConfig("open_api_key", newKey)
-    print("OpenAI API Key has been updated.")
+    print("OpenAI API Key ha sido actualizada")
     sys.exit(0)
 
 if args.update:
