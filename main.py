@@ -77,6 +77,11 @@ linuxSo = config['so']
 sshServers = config['ssh_servers']
 servers = defineServers(sshServers)
 
+if openApi == 'api':
+    print(f"\033[31mNo se encuentra API key de openai.\033[0m")
+    print(f"Puedes encontrarla en https://platform.openai.com/account/api-keys y agregarla con 'oe -a API_KEY'")
+    sys.exit(0)
+
 openai.api_key = openApi
 
 if commandMode:
@@ -102,6 +107,11 @@ response = openai.create(
     model=gptModel,
     messages=messagesList
 )
+
+if 'error' in response:
+    errorResponse = response['error']['message']
+    print(f"GPT:\n\033[31m{errorResponse}\033[0m")
+    sys.exit(0)
 
 gpt_cost.addResponse(response)
 gpt_cost.showCost(gptModel, True)
