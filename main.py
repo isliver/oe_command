@@ -124,12 +124,16 @@ if not commandMode:
 
 commandIA = responseIA.replace('\n','')
 filterCommandIA = getCommand(commandIA)
+superUser = ""
 
 print(f"Command:\n\033[;36m{filterCommandIA}\033[0m [Y/n]")
 
 ask = input()
 
+if ask.lower() == "s":
+    superUser = "sudo "
+
 if ask.lower() == "n":
     sys.exit(0)
 
-os.system(filterCommandIA)
+os.system(f"{superUser}{filterCommandIA}")
