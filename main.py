@@ -1,10 +1,10 @@
 import os
-import gpt_cost
 import sys
 import argparse
 import json
 from tools import update
 from tools import openai
+from tools import gpt_cost
 
 pathHome = os.environ['HOME']
 pathConfig = f"{pathHome}/.config/oe"
