@@ -44,18 +44,22 @@ parser = argparse.ArgumentParser()
 parser.add_argument("message", nargs="+", help="Mensaje con la consulta")
 parser.add_argument("-c", "--cost", help="Muestra el costo total hasta el momento", action="store_true")
 parser.add_argument("-q", "--question", help="Pregunta a chat gpt")
+parser.add_argument("-t", "--translation", help="Traducre texto con chat gpt", action="store_true")
 parser.add_argument("-a", "--api", help="Cambiar open ia api key", action="store_true")
 parser.add_argument("-u", "--update", help="Actualiza oe", action="store_true")
 
 args = parser.parse_args()
-commandMode = True
+commandMode = 'command'
 
 if args.cost:
     gpt_cost.showTotalCost()
     sys.exit(0)
 
 if args.question:
-    commandMode = False
+    commandMode = 'question'
+
+if args.translation:
+    commandMode = 'translation'
 
 if args.api:
     newKey = " ".join(args.message)
@@ -84,10 +88,12 @@ if openApi == 'api':
 
 openai.api_key = openApi
 
-if commandMode:
-    content = f"Su tarea es dar comandos bash útiles que hagan lo que un usuario le pide. Solo debes proveer comandos para el sistema de zsh, no debes agregar ninguna explicacion o comentario y no se utilizaran bloques de codigo. Sistema operativo {linuxSo}. Si no sabes como responder la pregunta solo di 'Comando no encontrado'"
-else:
-    content = "Tu tarea es responder lo mas breve posible las preguntas que se te haga."
+if commandMode == 'command':
+    content = f"You are a Linux terminal assistant.You must provide useful commands for the ZSH system in the Linux operating system.Your answers should only be the commands without descriptions, explanations, or code.If there is no answer, return 'Command not found'."
+elif commandMode == 'question':
+    content = "Your task is to answer as briefly as possible the questions you are asked."
+elif commandMode == 'translation':
+    content = "Translate the user input, if it's in English to Spanish and vice versa. Do not add any extra comments or text, only the translation."
 
 messagesList = [
     {
@@ -118,7 +124,7 @@ gpt_cost.showCost(gptModel, True)
 
 responseIA = response['choices'][0]['message']['content']
 
-if not commandMode:
+if commandMode != 'command':
     print(f"Response:\n\033[;32m{responseIA}\033[0m")
     sys.exit(0)
 
