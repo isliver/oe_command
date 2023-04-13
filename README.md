@@ -39,6 +39,7 @@ Mensaje para la consulta
 ```bash
 -c, --cost: Muestra el costo total de las consultas realizadas hasta el momento.
 -q, --question: Realiza una pregunta al Chatbot en lugar de dar un comando útil.
+-t, --translation: utiliza el modelo de lenguaje GPT para traducir el texto.
 -a, --api: cambia la clave API de OpenAI.
 -u, --update: actualiza el programa.
 ```
@@ -53,18 +54,32 @@ Ejecute el archivo Python desde la línea de comandos pasando como argumento el 
 
 ```bash
 oe Como puedo ver los archivos ocultos en Linux
+Command:
+ls -a [Y/n]
+```
+
+Seleccione la opción correspondiente para continuar: presione Enter para ejecutar el comando, "n" para cancelar, "s" para ejecutar el comando con "sudo", o "c" para copiar el comando en el portapapeles.
+
+Para realizar consultas breves a chat gpt
+
+```
+oe -q Cuál es la capital de Francia
+Response:
+París.
+```
+
+Para realizar una traduccion
+
+```
+oe -t hola mundo                 
+Response:
+hello world
 ```
 
 Para ver el costo total de las consultas realizadas hasta el momento, ejecute:
 
 ```
 oe -c today
-```
-
-Para realizar una pregunta al Chatbot en lugar de dar un comando útil, ejecute:
-
-```
-oe -q Cuál es la capital de Francia
 ```
 
 ## Configuración
@@ -74,3 +89,7 @@ El archivo de configuración config.json debe estar ubicado en la carpeta .confi
 * open_api_key: Clave de la API de OpenAI.
 * so: Sistema operativo utilizado (actualmente solo soporta Linux).
 * ssh_servers: Lista de objetos con información de los servidores SSH que se pueden utilizar en las respuestas del Chatbot.
+
+## Otros
+
+Si deseas utilizar la opción de copiar la respuesta al portapapeles en una terminal que no tiene instalado X11, necesitarás instalar el paquete "xclip". 
