@@ -42,6 +42,8 @@ def addResponse (response, verbose=False):
 
     if verbose:
         print(f"Tokens resume = completion: {completionTokens} prompt: {promptTokens} total: {totalTokens}")
+    
+    return f"Tokens resume = completion: {completionTokens} prompt: {promptTokens} total: {totalTokens}"
 
 def showCost (model="text-davinci-003", save=False, verbose=False):
     global globalCompletionTokens
@@ -56,6 +58,8 @@ def showCost (model="text-davinci-003", save=False, verbose=False):
         print(f"MODEL: {model}")
         print(f"Final Tokens consume = completion: {globalCompletionTokens} prompt: {globalPromptTokens} total: {globalTotalTokens}")
         print(f"Final cost: ${finalCost}")
+    
+    return f"Final Tokens consume = completion: {globalCompletionTokens} prompt: {globalPromptTokens} total: {globalTotalTokens}"
 
 def costByModel (model):
     if model == "text-davinci-003":
