@@ -136,6 +136,10 @@ print(f"Command:\n\033[;36m{filterCommandIA}\033[0m [Y/n]")
 
 ask = input()
 
+if ask.lower() == "c":
+    os.system(f"echo \"{filterCommandIA}\" | xclip -sel clip")
+    sys.exit(0)
+
 if ask.lower() == "s":
     superUser = "sudo "
 
