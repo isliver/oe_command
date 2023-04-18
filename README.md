@@ -85,9 +85,9 @@ oe -c today
 ## Configuración
 El archivo de configuración config.json debe estar ubicado en la carpeta .config/oe en la carpeta HOME del usuario. El archivo debe contener las siguientes propiedades:
 
-* gpt_model: Clave del modelo de GPT-3.
-* open_api_key: Clave de la API de OpenAI.
-* so: Sistema operativo utilizado (actualmente solo soporta Linux).
+* gpt_model: Modelo de lenguaje OPEN AI (default: gpt-3.5-turbo).
+* open_api_key: Clave de la API de OpenAI (default: env OPENAI_API_KEY).
+* so: Sistema operativo utilizado (actualmente solo soporta Linux) (default: Archlinux).
 * ssh_servers: Lista de objetos con información de los servidores SSH que se pueden utilizar en las respuestas del Chatbot.
 
 ## Otros
