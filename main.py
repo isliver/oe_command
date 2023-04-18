@@ -75,13 +75,17 @@ commandArg = " ".join(args.message)
 
 config = loadConfig()
 
+if 'OPENAI_API_KEY' in os.environ:
+    openApi = os.environ['OPENAI_API_KEY']
+else:
+    openApi = config['open_api_key']
+
 gptModel = config['gpt_model']
-openApi = config['open_api_key']
 linuxSo = config['so']
 sshServers = config['ssh_servers']
 servers = defineServers(sshServers)
 
-if openApi == 'api':
+if openApi == 'OPENAI_API_KEY':
     print(f"\033[31mNo se encuentra API key de openai.\033[0m")
     print(f"Puedes encontrarla en https://platform.openai.com/account/api-keys y agregarla con 'oe -a API_KEY'")
     sys.exit(0)
