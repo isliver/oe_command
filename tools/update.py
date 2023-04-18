@@ -2,6 +2,35 @@ import subprocess
 import os
 import re
 
+def getInfoChange ():
+    semanticEmojis = {
+        "feat": "🚀",
+        "fix": "🐛",
+        "docs": "📝",
+        "style": "💄",
+        "refactor": "🔨",
+        "test": "🧪",
+        "chore": "🧹"
+    }
+
+    urlRepo = "https://github.com/isliver/oe_command/commit/"
+
+    cmd = 'git log --pretty=format:"%H:%h:%s" HEAD..origin/main'
+    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+
+    if result.returncode != 0:
+        print(f"Error al obtener los commits: {result.stderr}")
+    else:
+        commits = result.stdout.strip().split('\n')
+
+        for commit in commits:
+            if len(commit) == 0:
+                continue
+            
+            largeHash, shortHash, type, message = commit.split(':')
+            link = f"\033]8;;{urlRepo}/{largeHash}\a{shortHash}\033]8;;\a"
+            print(f"[{link}]\t\t\t{semanticEmojis[type]}{message}")
+
 def update ():
     print(f"\033[;36mVerificando versiones\033[0m")
     pathHome = os.environ['HOME']
@@ -17,6 +46,8 @@ def update ():
 
     if localGitHash != remoteGitHash:
         print(f"\033[;36mNueva version\033[0m")
+        getInfoChange ()
+
         os.chdir(LOCAL_DIR)
         os.system('git pull')
     else:
