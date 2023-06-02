@@ -92,12 +92,12 @@ if openApi == 'OPENAI_API_KEY':
 
 openai.api_key = openApi
 
+content = ""
+
 if commandMode == 'command':
     content = f"You are a Linux terminal assistant.You must provide useful commands for the ZSH system in the Linux operating system.Your answers should only be the commands without descriptions, explanations, or code.If there is no answer, return 'Command not found'."
 elif commandMode == 'question':
     content = "Your task is to answer as briefly as possible the questions you are asked."
-elif commandMode == 'translation':
-    content = "Translate the user input, if it's in English to Spanish and vice versa. Do not add any extra comments or text, only the translation."
 
 messagesList = [
     {
@@ -112,6 +112,16 @@ userMessage = {
 }
 
 messagesList.append(userMessage)
+
+if commandMode == 'translation':
+    prompt = f"""
+    Translate the following text. \ 
+    Between English and Spanish: \ 
+    ```{commandArg}```
+    Do not add any extra comments, only the one translation.
+    """
+
+    messagesList = [{"role": "user", "content": prompt}]
 
 response = openai.create(
     model=gptModel,
