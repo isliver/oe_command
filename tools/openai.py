@@ -1,5 +1,6 @@
 import requests
 import json
+from tools import gpt_cost
 
 api_key = ""
 
@@ -12,12 +13,14 @@ def create (model="gpt-3.5-turbo",messages=[]):
     }
 
     payload = {
-        "model": "gpt-3.5-turbo",
+        "model": model,
         "messages": messages
     }
 
     response = requests.post(url, headers=headers, data=json.dumps(payload))
 
     json_response = response.json()
+
+    gpt_cost.addResponse(json_response, model)
 
     return json_response
