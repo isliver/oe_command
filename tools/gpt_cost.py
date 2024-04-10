@@ -5,18 +5,22 @@ from constant import prices
 
 pathHome = os.environ['HOME']
 pathLogCost = f"{pathHome}/.config/oe"
+fileLogCost = f"{pathHome}/.config/oe/log_cost.json"
 
 def saveCost (model, cost):
     if not os.path.exists(pathLogCost):
         os.makedirs(pathLogCost)
 
+    logData = {}
+
+    if os.path.exists(fileLogCost):
+        with open(fileLogCost, 'r') as file:
+            logData = json.load(file)
+
     now = datetime.utcnow()
     timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
     cost["ts"] = timestamp
     
-    with open(f"{pathLogCost}/log_cost.json", 'r') as file:
-        logData = json.load(file)
-
     if model not in logData:
         logData[model] = []
 
@@ -26,7 +30,7 @@ def saveCost (model, cost):
         json.dump(logData, file, indent=4)
 
 def openLogCost ():
-    with open(f"{pathLogCost}/log_cost.json", 'r') as file:
+    with open(fileLogCost, 'r') as file:
         logData = json.load(file)
     
     return logData
