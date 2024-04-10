@@ -30,3 +30,4 @@ echo -e "\033[32mCopiando Archivos de configuracion\033[0m"
 sudo cp oe /usr/local/bin
 mkdir -p $CONFIG_DIR
 cp config.json $CONFIG_DIR
+echo "{}" > "$CONFIG_DIR/log_cost.json"
