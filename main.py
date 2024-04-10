@@ -5,6 +5,7 @@ import json
 from tools import update
 from tools import openai
 from tools import gpt_cost
+from tools import oe_promsts
 
 pathHome = os.environ['HOME']
 pathConfig = f"{pathHome}/.config/oe"
@@ -40,6 +41,51 @@ def saveConfig (config, value):
     with open(f"{pathConfig}/config.json", 'w') as archivo:
         json.dump(configFile, archivo)
 
+def getGPTResult (gptModel, messagesList):
+    response = openai.create(
+        model=gptModel,
+        messages=messagesList
+    )
+
+    if 'error' in response:
+        errorResponse = response['error']['message']
+        print(f"GPT:\n\033[31m{errorResponse}\033[0m")
+        sys.exit(0)
+
+    responseIA = response['choices'][0]['message']['content']
+
+    if commandMode != 'command':
+        print(f"Response:\n\033[;32m{responseIA}\033[0m")
+        sys.exit(0)
+
+    commandIA = responseIA.replace('\n', '')
+    filterCommandIA = getCommand(commandIA)
+    superUser = ""
+
+    if filterCommandIA == 'Command not found':
+        return 'fail'
+
+    print(f"Command:\n\033[;36m{filterCommandIA}\033[0m [Y/n]")
+
+    ask = input()
+
+    if ask.lower() == "c":
+        os.system(f"echo \"{filterCommandIA}\" | xclip -sel clip")
+        sys.exit(0)
+
+    if ask.lower() == "s":
+        superUser = "sudo "
+
+    if ask.lower() == "n":
+        sys.exit(0)
+
+    if ask.lower() == "r":
+        return 'retry'
+
+    os.system(f"{superUser}{filterCommandIA}")
+
+    return 'done'
+
 parser = argparse.ArgumentParser()
 parser.add_argument("message", nargs="+", help="Mensaje con la consulta")
 parser.add_argument("-c", "--cost", help="Muestra el costo total hasta el momento", action="store_true")
@@ -52,7 +98,7 @@ args = parser.parse_args()
 commandMode = 'command'
 
 if args.cost:
-    gpt_cost.showTotalCost()
+    gpt_cost.showCost()
     sys.exit(0)
 
 if args.question:
@@ -75,89 +121,29 @@ commandArg = " ".join(args.message)
 
 config = loadConfig()
 
-if 'OPENAI_API_KEY' in os.environ:
-    openApi = os.environ['OPENAI_API_KEY']
-else:
-    openApi = config['open_api_key']
-
 gptModel = config['gpt_model']
+openApi = config['open_api_key']
 linuxSo = config['so']
 sshServers = config['ssh_servers']
 servers = defineServers(sshServers)
 
-if openApi == 'OPENAI_API_KEY':
+if openApi == 'api':
     print(f"\033[31mNo se encuentra API key de openai.\033[0m")
     print(f"Puedes encontrarla en https://platform.openai.com/account/api-keys y agregarla con 'oe -a API_KEY'")
     sys.exit(0)
 
 openai.api_key = openApi
 
-content = ""
+messagesList = oe_promsts.getMessagesList(commandMode, commandArg)
+result = getGPTResult(gptModel, messagesList)
 
-if commandMode == 'command':
-    content = f"You are a Linux terminal assistant.You must provide useful commands for the ZSH system in the Linux operating system.Your answers should only be the commands without descriptions, explanations, or code.If there is no answer, return 'Command not found'."
-elif commandMode == 'question':
-    content = "Your task is to answer as briefly as possible the questions you are asked."
-
-messagesList = [
-    {
-        "role": "system",
-        "content": content
-    }
-]
-
-userMessage = {
-    "role": "user",
-    "content": commandArg
-}
-
-messagesList.append(userMessage)
-
-if commandMode == 'translation':
-    prompt = f"""
-    Translate the following text. \ 
-    Between English and Spanish: \ 
-    ```{commandArg}```
-    Do not add any extra comments, only the one translation.
-    """
-
-    messagesList = [{"role": "user", "content": prompt}]
-
-response = openai.create(
-    model=gptModel,
-    messages=messagesList
-)
-
-if 'error' in response:
-    errorResponse = response['error']['message']
-    print(f"GPT:\n\033[31m{errorResponse}\033[0m")
+if result == 'done':
     sys.exit(0)
 
-gpt_cost.addResponse(response)
-gpt_cost.showCost(gptModel, True)
+retry = True
 
-responseIA = response['choices'][0]['message']['content']
-
-if commandMode != 'command':
-    print(f"Response:\n\033[;32m{responseIA}\033[0m")
-    sys.exit(0)
-
-commandIA = responseIA.replace('\n','')
-filterCommandIA = getCommand(commandIA)
-superUser = ""
-
-print(f"Command:\n\033[;36m{filterCommandIA}\033[0m [Y/n]")
-
-ask = input()
-
-if ask.lower() == "c":
-    os.system(f"echo \"{filterCommandIA}\" | xclip -sel clip")
-    sys.exit(0)
-
-if ask.lower() == "s":
-    superUser = "sudo "
-
-if ask.lower() == "n":
-    sys.exit(0)
-
-os.system(f"{superUser}{filterCommandIA}")
+while retry:
+    result = getGPTResult('gpt-4', messagesList)
+    
+    if result != 'retry':
+        retry = False
