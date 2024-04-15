@@ -6,13 +6,7 @@ from tools import update
 from tools import openai
 from tools import gpt_cost
 from tools import oe_promsts
-
-pathHome = os.environ['HOME']
-pathConfig = f"{pathHome}/.config/oe"
-
-def loadConfig ():
-    with open(f"{pathConfig}/config.json", 'r') as archivo:
-        return json.load(archivo)
+from tools import config
 
 def getCommand (response):
     findCode = response.find('```')
@@ -33,13 +27,6 @@ def defineServers (servers):
         training_servers += f"name:{server['name']}\nuser:{server['user']}\nurl: {server['url']}\n\n"
 
     return training_servers
-
-def saveConfig (config, value):
-    configFile = loadConfig ()
-    configFile[config] = value
-
-    with open(f"{pathConfig}/config.json", 'w') as archivo:
-        json.dump(configFile, archivo)
 
 def getGPTResult (gptModel, messagesList):
     response = openai.create(
@@ -109,7 +96,7 @@ if args.translation:
 
 if args.api:
     newKey = " ".join(args.message)
-    saveConfig("open_api_key", newKey)
+    config.saveConfig("open_api_key", newKey)
     print("OpenAI API Key ha sido actualizada")
     sys.exit(0)
 
@@ -119,13 +106,8 @@ if args.update:
 
 commandArg = " ".join(args.message)
 
-config = loadConfig()
-
-gptModel = config['gpt_model']
-openApi = config['open_api_key']
-linuxSo = config['so']
-sshServers = config['ssh_servers']
-servers = defineServers(sshServers)
+gptModel = config.SETTING['gpt_model']
+openApi = config.SETTING['open_api_key']
 
 if openApi == 'api':
     print(f"\033[31mNo se encuentra API key de openai.\033[0m")
