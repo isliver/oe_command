@@ -1,6 +1,10 @@
+from tools import config
+
+linuxSo = config.SETTING['so']
+
 def commandPromt ( command ):
-    content = """You are a Linux terminal assistant.
-    You must provide useful commands for the ZSH system in the Linux operating system.
+    content = f"""You are a Linux terminal assistant.
+    You must provide useful commands for the ZSH system in the {linuxSo} operating system.
     Your answers should only be the commands without descriptions, explanations, or code.
     If there is no answer, return 'Command not found'"""
 
