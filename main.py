@@ -52,6 +52,9 @@ def getGPTResult (gptModel, messagesList):
     if filterCommandIA == 'Command not found':
         return 'fail'
 
+    if 'sudo' in filterCommandIA:
+        filterCommandIA = filterCommandIA.replace('sudo', '')
+
     print(f"Command:\n\033[;36m{filterCommandIA}\033[0m [Y/n]")
 
     ask = input()
