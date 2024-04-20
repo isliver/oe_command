@@ -128,4 +128,5 @@ while retry:
     result = getGPTResult('gpt-4', messagesList)
     
     if result != 'retry':
+        print('Comando no encontrado')
         retry = False
