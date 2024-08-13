@@ -7,6 +7,7 @@ from tools import openai
 from tools import gpt_cost
 from tools import oe_promsts
 from tools import config
+from constant import prices
 
 def getCommand (response):
     findCode = response.find('```')
@@ -52,6 +53,10 @@ def getGPTResult (gptModel, messagesList):
     if filterCommandIA == 'Command not found':
         return 'fail'
 
+    if verbose > 0 :
+        print(filterCommandIA)
+        return 'done'
+
     if 'sudo' in filterCommandIA:
         filterCommandIA = filterCommandIA.replace('sudo', '')
 
@@ -83,9 +88,11 @@ parser.add_argument("-q", "--question", help="Pregunta a chat gpt")
 parser.add_argument("-t", "--translation", help="Traduce texto", action="store_true")
 parser.add_argument("-a", "--api", help="Cambiar open ia api key", action="store_true")
 parser.add_argument("-u", "--update", help="Actualiza oe", action="store_true")
+parser.add_argument("-o", "--only", help="Retorna solo el comando", action="store_true")
 
 args = parser.parse_args()
 commandMode = 'command'
+verbose = 0
 
 if args.cost:
     gpt_cost.showCost()
@@ -96,6 +103,9 @@ if args.question:
 
 if args.translation:
     commandMode = 'translation'
+
+if args.only:
+    verbose = 1
 
 if args.api:
     newKey = " ".join(args.message)
@@ -110,6 +120,10 @@ if args.update:
 commandArg = " ".join(args.message)
 
 gptModel = config.SETTING['gpt_model']
+
+if gptModel not in prices.prices:
+    gptModel = 'gpt-4o-mini'
+
 openApi = config.SETTING['open_api_key']
 
 if openApi == 'api':
