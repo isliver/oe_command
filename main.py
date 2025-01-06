@@ -85,6 +85,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("message", nargs="+", help="Mensaje con la consulta")
 parser.add_argument("-c", "--cost", help="Muestra el costo total hasta el momento", action="store_true")
 parser.add_argument("-q", "--question", help="Pregunta a chat gpt")
+parser.add_argument("-g", "--grammar", help="Revisa la gramatica del texto", action="store_true")
 parser.add_argument("-t", "--translation", help="Traduce texto", action="store_true")
 parser.add_argument("-a", "--api", help="Cambiar open ia api key", action="store_true")
 parser.add_argument("-u", "--update", help="Actualiza oe", action="store_true")
@@ -100,6 +101,9 @@ if args.cost:
 
 if args.question:
     commandMode = 'question'
+
+if args.grammar:
+    commandMode = 'grammar'
 
 if args.translation:
     commandMode = 'translation'

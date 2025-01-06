@@ -39,9 +39,10 @@ Mensaje para la consulta
 ```bash
 -c, --cost: Muestra el costo total de las consultas realizadas hasta el momento.
 -q, --question: Realiza una pregunta al Chatbot en lugar de dar un comando útil.
--t, --translation: utiliza el modelo de lenguaje GPT para traducir el texto.
--a, --api: cambia la clave API de OpenAI.
--u, --update: actualiza el programa.
+-g, --grammar: Utiliza el modelo de lenguaje GPT para traducir el texto.
+-t, --translation: Utiliza el modelo de lenguaje GPT para traducir el texto.
+-a, --api: Cambia la clave API de OpenAI.
+-u, --update: Actualiza el programa.
 ```
 
 Utiliza la API de OpenAI para obtener una respuesta al mensaje de consulta.

@@ -39,6 +39,18 @@ def questionPromt ( command ):
 
     return messagesList
 
+def grammarPromt ( command ):
+    prompt = f"""
+    Check the grammar and spelling of the following sentence while respecting its original language:
+
+    "{command}"
+
+    Do not add any extra comments, only the check the grammar and spelling.
+    """
+
+    messagesList = [{"role": "user", "content": prompt}]
+
+    return messagesList
 
 def translationPromt ( command ):
     prompt = f"""
@@ -56,6 +68,7 @@ def translationPromt ( command ):
 promts = {
     'command': commandPromt,
     'question': questionPromt,
+    'grammar': grammarPromt,
     'translation': translationPromt
 }
 
